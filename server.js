@@ -34,27 +34,33 @@ app.get('/', (req, res) => {
 // Store usernames
 const users = {};
 
+// Handle Socket.IO connections
 io.on('connection', (socket) => {
-  console.log('A user connected', socket.id);
+  console.log(`A user connected with socket ID: ${socket.id}`);
 
   // Handle setting the username
   socket.on('set_username', (username) => {
     users[socket.id] = username;
     console.log(`User ${username} connected with ID: ${socket.id}`);
+    // Optionally broadcast or log the event when a new user connects
+    io.emit('user_connected', { username, socketId: socket.id });
   });
 
   // Handle incoming messages
-  socket.on('send_message', (message) => {
+  socket.on('send_message', ({ message }) => {
     const username = users[socket.id] || 'Anonymous';
     console.log(`Message from ${username}: ${message}`);
-    // Send message to all other clients except the sender
+    // Broadcast the message to all other clients except the sender
     socket.broadcast.emit('receive_message', { message, senderId: socket.id, username });
   });
 
   // Handle disconnection
   socket.on('disconnect', () => {
-    console.log('A user disconnected', socket.id);
+    const username = users[socket.id];
+    console.log(`User ${username || 'Anonymous'} disconnected with socket ID: ${socket.id}`);
     delete users[socket.id];
+    // Optionally broadcast or log the event when a user disconnects
+    io.emit('user_disconnected', { username, socketId: socket.id });
   });
 });
 

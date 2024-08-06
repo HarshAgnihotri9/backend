@@ -83,14 +83,14 @@ const signUpUser = async (req, res) => {
 
 const loginuser = async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body.email);
   try {
     const existingUser = await userModel.findOne({email:email });
     if (!existingUser) {
       return res.status(400).json({ message: "User not exists" });
     }
+    
     // const existingUser = await userModel.findOne({ username: username });
-
+    
     // const cheackpassword = await bcrypt.compare(
     //   password,
     //   existingUser.password
@@ -102,8 +102,8 @@ const loginuser = async (req, res) => {
     // console.log(cheackpassword);
 
     // if (cheackpassword != password) {
-    //   res.status(500).json({ Error: true, Message: error });
-    // }
+      //   res.status(500).json({ Error: true, Message: error });
+      // }
 
     if (!cheackpassword) {
       // wrongAlert(existingUser.email);
@@ -113,7 +113,7 @@ const loginuser = async (req, res) => {
     // otpp = otpp.toString();
     // console.log(otpp);
 
-    otp(existingUser.email, otpp);
+    // otp(existingUser.email, otpp);
     // console.log("j");
     const token = jwt.sign(
       { username: existingUser.username, id: existingUser._id }, //payload
