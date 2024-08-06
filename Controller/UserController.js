@@ -82,13 +82,12 @@ const signUpUser = async (req, res) => {
 //login user code
 
 const loginuser = async (req, res) => {
-  const { username, password } = req.body;
-  // console.log(req.body.password);
+  const { email, password } = req.body;
+  console.log(req.body.email);
   try {
-    const existingUser = await userModel.findOne({ username: username });
+    const existingUser = await userModel.findOne({email:email });
     if (!existingUser) {
       return res.status(400).json({ message: "User not exists" });
-      wrongAlert(email);
     }
     // const existingUser = await userModel.findOne({ username: username });
 
@@ -100,19 +99,19 @@ const loginuser = async (req, res) => {
     if (existingUser.password == password) {
       cheackpassword = true;
     }
-    console.log(cheackpassword);
+    // console.log(cheackpassword);
 
     // if (cheackpassword != password) {
     //   res.status(500).json({ Error: true, Message: error });
     // }
 
     if (!cheackpassword) {
-      wrongAlert(existingUser.email);
+      // wrongAlert(existingUser.email);
       return res.status(400).json({ message: "Password Incoorect" });
     }
-    let otpp = Math.floor(1000 + Math.random() * 1000);
-    otpp = otpp.toString();
-    console.log(otpp);
+    // let otpp = Math.floor(1000 + Math.random() * 1000);
+    // otpp = otpp.toString();
+    // console.log(otpp);
 
     otp(existingUser.email, otpp);
     // console.log("j");
@@ -132,9 +131,9 @@ const loginuser = async (req, res) => {
     return res
       .cookie("token", token)
       .status(200)
-      .json({ message: "Logged in sucessfully", token: token, error: false });
+      .json({ message: "Logged in sucessfully", token: token, error: false,username:existingUser.username });
   } catch (error) {
-    wrongAlert(existingUser.email);
+    // wrongAlert(existingUser.email);
     return res.status(500).json({ Error: true, Message: error });
   }
 };
