@@ -19,6 +19,7 @@ const {
   resetpassword,
   sendotp,
   verifyotp,
+  saveTenantDetails,
 } = user;
 
 const router = express.Router();
@@ -31,6 +32,7 @@ router.get("/logout", logoutUser);
 router.post('/sendotp',sendotp)
 router.post('/verifyotp',verifyotp)
 router.post("/resetpassword", resetpassword);
+router.post('/tanentDetails',saveTenantDetails)
 
 // module.exports = router;
 export default router;

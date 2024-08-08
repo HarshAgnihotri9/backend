@@ -7,7 +7,7 @@ import { createRequire } from 'module'; // Import createRequire function
 const require = createRequire(import.meta.url); // Create require function for CommonJS modules
 const socketIo = require('socket.io'); // Import socket.io using require
 
-import router from './Routes/Userrouter.js';
+import router from './Routes/UserRouter.js';
 import adminRouter from './Routes/AdminRoute.js';
 
 // Load environment variables
@@ -69,8 +69,7 @@ const port = process.env.PORT || 3001;
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+  
     });
     console.log('Connected to MongoDB successfully');
     server.listen(port, () => {

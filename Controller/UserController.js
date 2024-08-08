@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser";
 // const { mailAlerts } = require("../Mail/MailAlert.js");
 import mailAlerts from "../Mail/MailAlert.js";
 import { application } from "express";
+import Tenant from "../MongoModel/TanentModel.js";
 // const { string } = require("joi");
 const {
   wrongAlert,
@@ -135,6 +136,35 @@ const loginuser = async (req, res) => {
   } catch (error) {
     // wrongAlert(existingUser.email);
     return res.status(500).json({ Error: true, Message: error });
+  }
+};
+
+const saveTenantDetails = async (req, res) => {
+  const { pgNo, phoneNo, aadhaarNo, roomNo, totalRent, place } = req.body;
+  console.log(req.body);
+  
+
+  try {
+    const newTenant = new Tenant({
+      pgNo,
+      phoneNo,
+      aadhaarNo,
+      roomNo,
+      totalRent,
+      place,
+    });
+    const existingTenure= await Tenant.findOne({phoneNo})
+    
+    if(existingTenure){
+      return res.status(400).json({ success: false,message: "Already a User"})
+    }
+    else{
+      await newTenant.save();
+      return res.status(201).json({ success: true, message: 'Tenant details saved successfully' });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Server error' });
   }
 };
 
@@ -270,6 +300,7 @@ const user = {
   updateProfile,
   logoutUser,
   sendotp,verifyotp,
+  saveTenantDetails
 };
 
 export default user;
